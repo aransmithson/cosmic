@@ -563,6 +563,137 @@
       background: linear-gradient(to right, transparent, rgba(201, 162, 39, 0.35), transparent);
     }
 
+    /* ---- Mode Toggle ---- */
+    .mode-toggle-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 28px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .mode-toggle-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: rgba(201, 162, 39, 0.5);
+      text-transform: uppercase;
+    }
+
+    .mode-toggle {
+      position: relative;
+      display: flex;
+      background: rgba(10, 7, 2, 0.9);
+      border: 1px solid rgba(201, 162, 39, 0.35);
+      border-radius: 8px;
+      overflow: hidden;
+      width: 300px;
+      cursor: pointer;
+    }
+
+    /* Sliding glowing pill */
+    #toggle-pill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(201,162,39,0.12), rgba(139,61,189,0.12));
+      border-radius: 7px;
+      border: 1px solid rgba(201, 162, 39, 0.45);
+      box-shadow: 0 0 18px rgba(201, 162, 39, 0.25), inset 0 0 12px rgba(201, 162, 39, 0.05);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .toggle-option {
+      flex: 1;
+      padding: 12px 8px;
+      text-align: center;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: rgba(201, 162, 39, 0.4);
+      transition: color 0.3s;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+
+    .toggle-option .toggle-icon {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 3px;
+    }
+
+    .toggle-option.toggle-active {
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(201, 162, 39, 0.6);
+    }
+
+    /* Hard mode: when active, pill glows red/void instead */
+    #toggle-hard.toggle-active {
+      color: #c084fc;
+      text-shadow: 0 0 12px rgba(139, 61, 189, 0.8);
+    }
+
+    .mode-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid;
+      margin-top: 6px;
+    }
+    .mode-badge.easy-badge {
+      color: var(--gold);
+      border-color: rgba(201, 162, 39, 0.4);
+      background: rgba(201, 162, 39, 0.08);
+    }
+    .mode-badge.hard-badge {
+      color: #c084fc;
+      border-color: rgba(192, 132, 252, 0.4);
+      background: rgba(139, 61, 189, 0.12);
+      text-shadow: 0 0 10px rgba(192, 132, 252, 0.5);
+    }
+
+    /* Hard mode grid: 3 columns */
+    .game-buttons-grid.hard-mode {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 460px;
+    }
+
+    .game-buttons-grid.hard-mode .game-button {
+      font-size: 3rem;
+    }
+
+    .game-buttons-grid.hard-mode .game-button::before {
+      font-size: 2.8rem;
+    }
+
+    /* Shadow */
+    .game-button-4 {
+      background: linear-gradient(135deg, #0d0320, #2e1065, #0d0320);
+      box-shadow: 0 4px 24px rgba(88, 28, 135, 0.4);
+      border-color: rgba(167, 139, 250, 0.35);
+    }
+    .game-button-4::before { content: '🌑'; }
+    .game-button-4.active  { box-shadow: 0 0 55px #a78bfa, 0 0 20px #a78bfa; border-color: #a78bfa; }
+
+    /* Void */
+    .game-button-5 {
+      background: linear-gradient(135deg, #200a20, #701a75, #200a20);
+      box-shadow: 0 4px 24px rgba(112, 26, 117, 0.4);
+      border-color: rgba(240, 171, 252, 0.35);
+    }
+    .game-button-5::before { content: '🔮'; }
+    .game-button-5.active  { box-shadow: 0 0 55px #f0abfc, 0 0 20px #f0abfc; border-color: #f0abfc; }
+
     .hidden { display: none; }
 
     @media (max-width: 640px) {
@@ -602,6 +733,23 @@
           <h1>ARCANE MEMORY</h1>
         </div>
         <p class="tagline">Commune with the elements — repeat the spell or be consumed</p>
+
+        <!-- Mode Toggle -->
+        <div class="mode-toggle-wrapper">
+          <span class="mode-toggle-label">✦ Choose your path ✦</span>
+          <div class="mode-toggle">
+            <div id="toggle-pill"></div>
+            <div id="toggle-easy" class="toggle-option toggle-active" onclick="setMode(false)">
+              <span class="toggle-icon">🕯️</span>
+              Apprentice
+            </div>
+            <div id="toggle-hard" class="toggle-option" onclick="setMode(true)">
+              <span class="toggle-icon">💀</span>
+              Archmage
+            </div>
+          </div>
+        </div>
+
         <button class="button" onclick="startGame()">⚗ Begin the Ritual ⚗</button>
 
         <div class="highscores-box">
@@ -617,6 +765,9 @@
             <div class="stat-label">Incantation</div>
             <div class="stat-value"><span id="round-display">1</span></div>
           </div>
+          <div style="text-align:center; position:relative; z-index:2;">
+            <div id="mode-badge" class="mode-badge"></div>
+          </div>
           <div class="stat-score">
             <div class="stat-label">Power</div>
             <div class="stat-value"><span id="score-display">0</span></div>
@@ -629,11 +780,13 @@
           <div class="rune-ring ring-3"></div>
           <div class="rune-ring ring-4"></div>
 
-          <div class="game-buttons-grid">
+          <div id="game-buttons-grid" class="game-buttons-grid">
             <button class="game-button game-button-0"></button>
             <button class="game-button game-button-1"></button>
             <button class="game-button game-button-2"></button>
             <button class="game-button game-button-3"></button>
+            <button class="game-button game-button-4 game-button-hard hidden"></button>
+            <button class="game-button game-button-5 game-button-hard hidden"></button>
           </div>
         </div>
 
@@ -646,6 +799,7 @@
         <div class="gameover-stats">
           <div>The ritual lasted <strong><span id="final-round">1</span></strong> incantations</div>
           <div style="color: var(--gold);">Power amassed: <strong><span id="final-score">0</span></strong></div>
+          <div id="final-mode" style="margin-top:8px; font-size:1rem; opacity:0.6;"></div>
         </div>
 
         <div class="divider">✦ ✦ ✦</div>
@@ -675,13 +829,16 @@
     let score = 0;
     let highScores = [];
     let audioContext;
+    let hardMode = false;
 
-    // Elemental tones (pentatonic-ish for mystical feel)
+    // Elemental tones (pentatonic scale — all 6 fit D major pentatonic)
     const colors = [
       { sound: 293.66 },  // D4  - Fire
       { sound: 370.00 },  // F#4 - Frost
       { sound: 440.00 },  // A4  - Storm
-      { sound: 587.33 }   // D5  - Nature
+      { sound: 587.33 },  // D5  - Nature
+      { sound: 659.25 },  // E5  - Shadow
+      { sound: 783.99 },  // B5  - Void
     ];
 
     // ---- Init ----
@@ -884,17 +1041,39 @@
       round = 1;
       score = 0;
       document.getElementById('success-overlay').classList.add('hidden');
+
+      // Apply hard/easy grid layout
+      const grid = document.getElementById('game-buttons-grid');
+      if (hardMode) {
+        grid.classList.add('hard-mode');
+        document.querySelectorAll('.game-button-hard').forEach(b => b.classList.remove('hidden'));
+      } else {
+        grid.classList.remove('hard-mode');
+        document.querySelectorAll('.game-button-hard').forEach(b => b.classList.add('hidden'));
+      }
+
+      // Set mode badge
+      const badge = document.getElementById('mode-badge');
+      if (hardMode) {
+        badge.textContent = '💀 Archmage';
+        badge.className = 'mode-badge hard-badge';
+      } else {
+        badge.textContent = '🕯️ Apprentice';
+        badge.className = 'mode-badge easy-badge';
+      }
+
       showScreen('playing-screen');
       updateDisplay();
       nextRound();
     }
 
     function nextRound() {
+      const numButtons = hardMode ? 6 : 4;
       if (sequence.length === 0) {
         const len = 4 + (round - 1);
-        sequence = Array.from({ length: len }, () => Math.floor(Math.random() * 4));
+        sequence = Array.from({ length: len }, () => Math.floor(Math.random() * numButtons));
       } else {
-        sequence.push(Math.floor(Math.random() * 4));
+        sequence.push(Math.floor(Math.random() * numButtons));
       }
       playerSequence = [];
       playSequence();
@@ -963,6 +1142,7 @@
       gameState = 'gameover';
       document.getElementById('final-round').textContent = round;
       document.getElementById('final-score').textContent = score;
+      document.getElementById('final-mode').textContent = hardMode ? '💀 Archmage Mode' : '🕯️ Apprentice Mode';
 
       const isHighScore = highScores.length < 10 || score > highScores[highScores.length - 1]?.score;
       if (isHighScore) {
@@ -1016,16 +1196,28 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    // ---- Mode Toggle ----
+    function setMode(isHard) {
+      hardMode = isHard;
+      document.getElementById('toggle-easy').classList.toggle('toggle-active', !isHard);
+      document.getElementById('toggle-hard').classList.toggle('toggle-active', isHard);
+      document.getElementById('toggle-pill').style.transform = isHard ? 'translateX(100%)' : 'translateX(0%)';
+      // Update tagline
+      document.querySelector('.tagline').textContent = isHard
+        ? 'Six elements await — only the worthy survive'
+        : 'Commune with the elements — repeat the spell or be consumed';
+    }
+
     // ---- Input handlers ----
     document.addEventListener('DOMContentLoaded', () => {
       // Touch-safe button handlers — prevent touch→click double-fire
+      // Register all 6 buttons; hard-only ones are hidden in easy mode
       document.querySelectorAll('.game-button').forEach((btn, i) => {
         btn.addEventListener('touchstart', (e) => {
-          e.preventDefault(); // stop the ghost click that follows
+          e.preventDefault();
           handleButtonClick(i);
         }, { passive: false });
         btn.addEventListener('click', () => {
-          // Only fires on true mouse clicks (touch is blocked above)
           handleButtonClick(i);
         });
       });
