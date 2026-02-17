@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosmic Sequence</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #000000, #1a0033, #000000);
+      min-height: 100vh;
+      overflow: hidden;
+      color: white;
+    }
+
+    #stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .stars-layer {
+      position: absolute;
+      width: 200%;
+      height: 100%;
+      background-repeat: repeat;
+    }
+
+    .stars-layer-1 {
+      animation: scroll-stars 120s linear infinite;
+      opacity: 0.3;
+    }
+
+    .stars-layer-2 {
+      animation: scroll-stars 80s linear infinite;
+      opacity: 0.5;
+    }
+
+    .stars-layer-3 {
+      animation: scroll-stars 50s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes scroll-stars {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { 
+        box-shadow: 0 0 20px currentColor;
+        filter: brightness(0.75);
+      }
+      50% { 
+        box-shadow: 0 0 40px currentColor;
+        filter: brightness(1.5);
+      }
+    }
+
+    @keyframes rotate-ring-1 {
+      from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(0deg); }
+      to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg); }
+    }
+
+    @keyframes rotate-ring-2 {
+      from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(45deg); }
+      to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(405deg); }
+    }
+
+    @keyframes rotate-ring-3 {
+      from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(90deg); }
+      to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(450deg); }
+    }
+
+    @keyframes rotate-ring-4 {
+      from { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(135deg); }
+      to { transform: translate(-50%, -50%) rotateX(60deg) rotateZ(495deg); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -1000px; }
+      100% { background-position: 1000px; }
+    }
+
+    #game-container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    #game-content {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .title-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .saturn-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .ring-1 {
+      width: 220%;
+      height: 55px;
+      border: 8px solid rgba(147, 51, 234, 0.6);
+      animation: rotate-ring-1 8s linear infinite;
+      box-shadow: 
+        0 0 30px rgba(147, 51, 234, 0.8),
+        inset 0 0 30px rgba(147, 51, 234, 0.4);
+    }
+
+    .ring-2 {
+      width: 190%;
+      height: 48px;
+      border: 7px solid rgba(168, 85, 247, 0.5);
+      animation: rotate-ring-2 7s linear infinite reverse;
+      box-shadow: 
+        0 0 25px rgba(168, 85, 247, 0.7),
+        inset 0 0 25px rgba(168, 85, 247, 0.3);
+    }
+
+    .ring-3 {
+      width: 165%;
+      height: 42px;
+      border: 6px solid rgba(192, 132, 252, 0.45);
+      animation: rotate-ring-3 9s linear infinite;
+      box-shadow: 
+        0 0 20px rgba(192, 132, 252, 0.6),
+        inset 0 0 20px rgba(192, 132, 252, 0.3);
+    }
+
+    .ring-4 {
+      width: 145%;
+      height: 38px;
+      border: 5px solid rgba(216, 180, 254, 0.4);
+      animation: rotate-ring-4 6s linear infinite reverse;
+      box-shadow: 
+        0 0 15px rgba(216, 180, 254, 0.5),
+        inset 0 0 15px rgba(216, 180, 254, 0.25);
+    }
+
+    h1 {
+      font-size: 4rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #60a5fa);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+      text-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+      position: relative;
+      z-index: 3;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      color: #a78bfa;
+      margin-bottom: 40px;
+      opacity: 0.9;
+      font-style: italic;
+      position: relative;
+      z-index: 2;
+    }
+
+    .button {
+      background: linear-gradient(to right, #2563eb, #7c3aed);
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+      margin: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.8);
+    }
+
+    .button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: scale(1);
+    }
+
+    .game-buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 400px;
+      margin: 40px auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .game-button {
+      aspect-ratio: 1;
+      border: none;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.15s;
+      filter: brightness(0.75);
+      position: relative;
+      z-index: 3;
+      overflow: visible;
+    }
+
+    .game-button:not(:disabled):hover {
+      transform: scale(1.05);
+      filter: brightness(1);
+    }
+
+    .game-button:disabled {
+      cursor: not-allowed;
+    }
+
+    .game-button.active {
+      transform: scale(0.95);
+      filter: brightness(1.5);
+      animation: pulse-glow 0.3s ease-in-out;
+    }
+
+    .game-button.wrong {
+      filter: brightness(0.5);
+    }
+
+    .game-button.wrong::after {
+      content: '✕';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 5rem;
+      color: #ef4444;
+      text-shadow: 0 0 20px #ef4444, 0 0 40px #ef4444;
+      font-weight: bold;
+      animation: show-cross 0.3s ease-out;
+    }
+
+    @keyframes show-cross {
+      from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .success-overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .success-circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.2);
+      border: 8px solid #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: success-appear 0.3s ease-out, success-fadeout 0.5s ease-in 1.5s forwards;
+      box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+    }
+
+    .success-tick {
+      font-size: 8rem;
+      color: #10b981;
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+      animation: tick-draw 0.5s ease-out 0.2s forwards;
+      opacity: 0;
+    }
+
+    @keyframes success-appear {
+      from {
+        transform: scale(0);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes success-fadeout {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: scale(1.2);
+      }
+    }
+
+    @keyframes tick-draw {
+      from {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .game-button-0 {
+      background: linear-gradient(135deg, #3b82f6, #1e40af);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+    }
+
+    .game-button-1 {
+      background: linear-gradient(135deg, #10b981, #047857);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    .game-button-2 {
+      background: linear-gradient(135deg, #ef4444, #991b1b);
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.5);
+    }
+
+    .game-button-3 {
+      background: linear-gradient(135deg, #eab308, #a16207);
+      box-shadow: 0 4px 20px rgba(234, 179, 8, 0.5);
+    }
+
+    .game-button-0.active { box-shadow: 0 0 40px #3b82f6; }
+    .game-button-1.active { box-shadow: 0 0 40px #10b981; }
+    .game-button-2.active { box-shadow: 0 0 40px #ef4444; }
+    .game-button-3.active { box-shadow: 0 0 40px #eab308; }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-round { color: #60a5fa; }
+    .stat-score { color: #10b981; }
+
+    .highscores-box {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(147, 51, 234, 0.5);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .highscores-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: linear-gradient(to right, #fbbf24, #f97316);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .highscore-entry {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 16px;
+      margin: 8px 0;
+      background: rgba(124, 58, 237, 0.2);
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+
+    .highscore-rank {
+      color: #fbbf24;
+      font-weight: bold;
+      width: 50px;
+    }
+
+    .highscore-initials {
+      font-weight: bold;
+      width: 80px;
+    }
+
+    .highscore-score {
+      color: #10b981;
+    }
+
+    .gameover-screen {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .gameover-title {
+      font-size: 4rem;
+      color: #ef4444;
+      animation: pulse 1s infinite;
+      margin-bottom: 20px;
+    }
+
+    .gameover-stats {
+      font-size: 2rem;
+      margin: 20px 0;
+    }
+
+    .new-highscore {
+      font-size: 1.5rem;
+      color: #10b981;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .initials-input {
+      background: #1f2937;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 12px;
+      border: 2px solid #7c3aed;
+      border-radius: 8px;
+      width: 150px;
+      text-transform: uppercase;
+      margin: 20px 0;
+    }
+
+    .watch-sequence {
+      font-size: 1.3rem;
+      color: #fbbf24;
+      font-weight: bold;
+      animation: pulse 1s infinite;
+      margin-top: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      .tagline {
+        font-size: 1rem;
+      }
+      .game-buttons-grid {
+        max-width: 300px;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="stars-container">
+    <canvas id="stars-layer-1" class="stars-layer stars-layer-1"></canvas>
+    <canvas id="stars-layer-2" class="stars-layer stars-layer-2"></canvas>
+    <canvas id="stars-layer-3" class="stars-layer stars-layer-3"></canvas>
+  </div>
+
+  <div id="game-container">
+    <div id="game-content">
+      <!-- Success Overlay -->
+      <div id="success-overlay" class="success-overlay hidden">
+        <div class="success-circle">
+          <div class="success-tick">✓</div>
+        </div>
+      </div>
+
+      <!-- Menu Screen -->
+      <div id="menu-screen">
+        <div class="title-wrapper">
+          <div class="saturn-ring ring-1"></div>
+          <div class="saturn-ring ring-2"></div>
+          <div class="saturn-ring ring-3"></div>
+          <div class="saturn-ring ring-4"></div>
+          <h1>COSMIC SEQUENCE</h1>
+        </div>
+        <p class="tagline">Remember the sequence, beat the hi-score</p>
+        <button class="button" onclick="startGame()">START GAME</button>
+        
+        <div class="highscores-box">
+          <div class="highscores-title">TOP SCORES</div>
+          <div id="highscores-list"></div>
+        </div>
+      </div>
+
+      <!-- Playing Screen -->
+      <div id="playing-screen" class="hidden">
+        <div class="stats">
+          <div class="stat-round">ROUND: <span id="round-display">1</span></div>
+          <div class="stat-score">SCORE: <span id="score-display">0</span></div>
+        </div>
+
+        <div style="position: relative; margin: 0 auto; max-width: 500px;">
+          <div class="saturn-ring ring-1"></div>
+          <div class="saturn-ring ring-2"></div>
+          <div class="saturn-ring ring-3"></div>
+          <div class="saturn-ring ring-4"></div>
+          
+          <div class="game-buttons-grid">
+            <button class="game-button game-button-0" onclick="handleButtonClick(0)"></button>
+            <button class="game-button game-button-1" onclick="handleButtonClick(1)"></button>
+            <button class="game-button game-button-2" onclick="handleButtonClick(2)"></button>
+            <button class="game-button game-button-3" onclick="handleButtonClick(3)"></button>
+          </div>
+        </div>
+
+        <div id="watch-message" class="watch-sequence hidden">WATCH THE SEQUENCE...</div>
+      </div>
+
+      <!-- Game Over Screen -->
+      <div id="gameover-screen" class="hidden gameover-screen">
+        <h2 class="gameover-title">GAME OVER</h2>
+        <div class="gameover-stats">
+          <div>Final Round: <span id="final-round">1</span></div>
+          <div style="color: #fbbf24;">Score: <span id="final-score">0</span></div>
+        </div>
+
+        <div id="new-highscore-section" class="hidden">
+          <div class="new-highscore">NEW HIGH SCORE!</div>
+          <div>
+            <label style="font-size: 1.2rem;">Enter Initials (2-3 letters):</label><br>
+            <input type="text" id="initials-input" class="initials-input" maxlength="3" placeholder="AAA">
+          </div>
+          <button class="button" onclick="submitScore()" id="submit-button">SUBMIT</button>
+        </div>
+
+        <button class="button" id="back-to-menu-button" onclick="backToMenu()">BACK TO MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Game State
+    let gameState = 'menu';
+    let sequence = [];
+    let playerSequence = [];
+    let isPlaying = false;
+    let round = 1;
+    let score = 0;
+    let highScores = [];
+    let audioContext;
+
+    // Color/Sound Configuration
+    const colors = [
+      { sound: 261.63 },
+      { sound: 329.63 },
+      { sound: 392.00 },
+      { sound: 523.25 }
+    ];
+
+    // Initialize
+    window.onload = function() {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      generateStars();
+      loadHighScores();
+    };
+
+    // Parallax Stars
+    function generateStars() {
+      const layers = [
+        { canvas: document.getElementById('stars-layer-1'), count: 50, size: 1 },
+        { canvas: document.getElementById('stars-layer-2'), count: 40, size: 1.5 },
+        { canvas: document.getElementById('stars-layer-3'), count: 30, size: 2 }
+      ];
+
+      layers.forEach(layer => {
+        layer.canvas.width = window.innerWidth * 2;
+        layer.canvas.height = window.innerHeight;
+        const ctx = layer.canvas.getContext('2d');
+        
+        for (let i = 0; i < layer.count; i++) {
+          const x = Math.random() * layer.canvas.width;
+          const y = Math.random() * layer.canvas.height;
+          const opacity = Math.random() * 0.5 + 0.5;
+          
+          ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+          ctx.beginPath();
+          ctx.arc(x, y, layer.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+    }
+
+    // High Scores
+    async function loadHighScores() {
+      try {
+        const result = await window.storage.get('cosmic-sequence-highscores');
+        if (result && result.value) {
+          highScores = JSON.parse(result.value);
+          highScores.sort((a, b) => b.score - a.score);
+          highScores = highScores.slice(0, 10);
+        }
+      } catch (error) {
+        console.log('No high scores found yet');
+        highScores = [];
+      }
+      displayHighScores();
+    }
+
+    function displayHighScores() {
+      const list = document.getElementById('highscores-list');
+      if (highScores.length === 0) {
+        list.innerHTML = '<p style="color: #9ca3af; font-size: 1.1rem;">No scores yet - be the first!</p>';
+      } else {
+        list.innerHTML = highScores.slice(0, 5).map((score, index) => `
+          <div class="highscore-entry">
+            <span class="highscore-rank">#${index + 1}</span>
+            <span class="highscore-initials">${score.initials}</span>
+            <span class="highscore-score">${score.score}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    async function saveHighScore(initials, finalScore) {
+      try {
+        const newScore = { initials: initials.toUpperCase(), score: finalScore, date: new Date().toISOString() };
+        highScores.push(newScore);
+        highScores.sort((a, b) => b.score - a.score);
+        highScores = highScores.slice(0, 10);
+        
+        await window.storage.set('cosmic-sequence-highscores', JSON.stringify(highScores));
+        displayHighScores();
+      } catch (error) {
+        console.error('Failed to save high score:', error);
+      }
+    }
+
+    // Audio
+    function playSound(frequency) {
+      if (!audioContext) return;
+      
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.value = frequency;
+      oscillator.type = 'sine';
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.3);
+    }
+
+    // Game Logic
+    function startGame() {
+      gameState = 'playing';
+      sequence = [];
+      playerSequence = [];
+      round = 1;
+      score = 0;
+      
+      // Hide success overlay in case it's visible
+      document.getElementById('success-overlay').classList.add('hidden');
+      
+      showScreen('playing-screen');
+      updateDisplay();
+      nextRound();
+    }
+
+    function nextRound() {
+      const sequenceLength = 4 + (round - 1);
+      if (sequence.length === 0) {
+        sequence = Array.from({ length: sequenceLength }, () => Math.floor(Math.random() * 4));
+      } else {
+        sequence.push(Math.floor(Math.random() * 4));
+      }
+      
+      playerSequence = [];
+      playSequence();
+    }
+
+    async function playSequence() {
+      isPlaying = true;
+      disableButtons(true);
+      document.getElementById('watch-message').classList.remove('hidden');
+      
+      // Speed increases every 3 rounds
+      const baseDelay = 400;
+      const minDelay = 150;
+      const speedReduction = Math.floor((round - 1) / 3) * 50;
+      const delay = Math.max(minDelay, baseDelay - speedReduction);
+      
+      // Show the full sequence including repetitions
+      for (let i = 0; i < sequence.length; i++) {
+        await sleep(delay);
+        activateButton(sequence[i]);
+        playSound(colors[sequence[i]].sound);
+        await sleep(delay);
+        deactivateButton(sequence[i]);
+      }
+      
+      document.getElementById('watch-message').classList.add('hidden');
+      isPlaying = false;
+      disableButtons(false);
+    }
+
+    function handleButtonClick(buttonId) {
+      if (isPlaying) return;
+      
+      playerSequence.push(buttonId);
+      
+      // Check if correct
+      if (buttonId !== sequence[playerSequence.length - 1]) {
+        // Wrong button pressed - show red cross and play error sound
+        playSound(200); // Lower frequency for error
+        disableButtons(true);
+        const wrongButton = document.querySelector(`.game-button-${buttonId}`);
+        wrongButton.classList.add('wrong');
+        
+        // End game after 3 seconds
+        setTimeout(() => {
+          wrongButton.classList.remove('wrong');
+          gameOver();
+        }, 3000);
+        return;
+      }
+      
+      // Correct button - normal feedback
+      activateButton(buttonId);
+      playSound(colors[buttonId].sound);
+      setTimeout(() => deactivateButton(buttonId), 300);
+      
+      // Check if round complete
+      if (playerSequence.length === sequence.length) {
+        score += sequence.length * 10;
+        round++;
+        updateDisplay();
+        disableButtons(true);
+        
+        // Show success tick with sound
+        playSound(660); // High frequency for success
+        const successOverlay = document.getElementById('success-overlay');
+        successOverlay.classList.remove('hidden');
+        
+        // Hide success tick and start next round after animation (2 seconds)
+        setTimeout(() => {
+          successOverlay.classList.add('hidden');
+          nextRound();
+        }, 2000);
+      }
+    }
+
+    function gameOver() {
+      gameState = 'gameover';
+      document.getElementById('final-round').textContent = round;
+      document.getElementById('final-score').textContent = score;
+      
+      // Check if high score
+      const isHighScore = highScores.length < 10 || score > highScores[highScores.length - 1]?.score;
+      
+      if (isHighScore) {
+        document.getElementById('new-highscore-section').classList.remove('hidden');
+        document.getElementById('back-to-menu-button').classList.add('hidden');
+        document.getElementById('initials-input').focus();
+      } else {
+        document.getElementById('new-highscore-section').classList.add('hidden');
+        document.getElementById('back-to-menu-button').classList.remove('hidden');
+      }
+      
+      showScreen('gameover-screen');
+    }
+
+    function submitScore() {
+      const initials = document.getElementById('initials-input').value.trim().toUpperCase();
+      if (initials.length >= 2) {
+        saveHighScore(initials, score);
+        document.getElementById('initials-input').value = '';
+        backToMenu();
+      }
+    }
+
+    function backToMenu() {
+      gameState = 'menu';
+      showScreen('menu-screen');
+    }
+
+    // UI Helpers
+    function showScreen(screenId) {
+      document.getElementById('menu-screen').classList.add('hidden');
+      document.getElementById('playing-screen').classList.add('hidden');
+      document.getElementById('gameover-screen').classList.add('hidden');
+      document.getElementById(screenId).classList.remove('hidden');
+    }
+
+    function updateDisplay() {
+      document.getElementById('round-display').textContent = round;
+      document.getElementById('score-display').textContent = score;
+    }
+
+    function activateButton(buttonId) {
+      document.querySelector(`.game-button-${buttonId}`).classList.add('active');
+    }
+
+    function deactivateButton(buttonId) {
+      document.querySelector(`.game-button-${buttonId}`).classList.remove('active');
+    }
+
+    function disableButtons(disabled) {
+      document.querySelectorAll('.game-button').forEach(btn => {
+        btn.disabled = disabled;
+      });
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Allow Enter key to submit initials
+    document.addEventListener('DOMContentLoaded', () => {
+      const initialsInput = document.getElementById('initials-input');
+      if (initialsInput) {
+        initialsInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            submitScore();
+          }
+        });
+        
+        initialsInput.addEventListener('input', (e) => {
+          const btn = document.getElementById('submit-button');
+          btn.disabled = e.target.value.length < 2;
+        });
+      }
+    });
+
+    // Resize handler for stars
+    window.addEventListener('resize', generateStars);
+  </script>
+</body>
+</html>
