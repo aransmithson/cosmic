@@ -639,11 +639,14 @@
     }
 
     // High Scores
+    // UPDATE THIS URL to your deployed Worker URL
+    const WORKER_URL = 'https://your-worker.your-subdomain.workers.dev';
+    
     async function loadHighScores() {
       try {
-        const result = await window.storage.get('cosmic-sequence-highscores');
-        if (result && result.value) {
-          highScores = JSON.parse(result.value);
+        const response = await fetch(`${WORKER_URL}/highscores`);
+        if (response.ok) {
+          highScores = await response.json();
           highScores.sort((a, b) => b.score - a.score);
           highScores = highScores.slice(0, 10);
         }
@@ -671,13 +674,21 @@
 
     async function saveHighScore(initials, finalScore) {
       try {
-        const newScore = { initials: initials.toUpperCase(), score: finalScore, date: new Date().toISOString() };
-        highScores.push(newScore);
-        highScores.sort((a, b) => b.score - a.score);
-        highScores = highScores.slice(0, 10);
+        const response = await fetch(`${WORKER_URL}/highscores`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            initials: initials.toUpperCase(),
+            score: finalScore
+          })
+        });
         
-        await window.storage.set('cosmic-sequence-highscores', JSON.stringify(highScores));
-        displayHighScores();
+        if (response.ok) {
+          highScores = await response.json();
+          displayHighScores();
+        }
       } catch (error) {
         console.error('Failed to save high score:', error);
       }
