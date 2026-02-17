@@ -1084,8 +1084,8 @@
       disableButtons(true);
       document.getElementById('watch-message').classList.remove('hidden');
 
-      const baseDelay = 450;
-      const minDelay = 160;
+      const baseDelay = hardMode ? 300 : 450;
+      const minDelay = hardMode ? 100 : 160;
       const speedReduction = Math.floor((round - 1) / 3) * 50;
       const delay = Math.max(minDelay, baseDelay - speedReduction);
 
